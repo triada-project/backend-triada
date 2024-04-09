@@ -1,5 +1,21 @@
 const mongoose = require('mongoose');
 
+const addressSchema = new mongoose.Schema({
+  city: {
+    type: String,
+    required: true,
+  },
+  town: {
+    type: String,
+    required: true,
+  },
+});
+
+const multimediaSchema = new mongoose.Schema({
+  images: Array,
+  videos: Array,
+});
+
 const userSchema = new mongoose.Schema({
   name: String,
   email: {
@@ -22,17 +38,9 @@ const userSchema = new mongoose.Schema({
     enum: ['cliente', 'musico'],
     required: true,
   },
-  city: {
-    type: String,
-    required: function () {
-      return this.tipo === 'musico';
-    },
-  },
-  town: {
-    type: String,
-    required: function () {
-      return this.tipo === 'musico';
-    },
+  address: {
+    type: addressSchema,
+    required: true,
   },
   musicianType: {
     type: String,
@@ -63,8 +71,7 @@ const userSchema = new mongoose.Schema({
     },
   },
   description: String,
-  images: Array,
-  videos: Array,
+  multimedia: multimediaSchema,
   eventFee: {
     type: Number,
     required: function () {
