@@ -10,18 +10,19 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: {
     type: String,
-    unique: true,
     required: true,
-    match: [
-      /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-      'Debe ingresar un correo valido',
-    ],
+    // unique: true,
+    // match: [
+    //   /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+    //   'Debe ingresar un correo valido',
+    // ],
   },
   password: {
     type: String,
-    required: [true, 'El password es requerido'],
-    match: /^(.){8,300}$/,
+    // required: [true, 'El password es requerido'],
+    // match: /^(.){8,300}$/,
   },
+  
   profilePicture: String,
   role: {
     type: String,
@@ -86,4 +87,5 @@ const userSchema = new mongoose.Schema({
 });
 
 const Users = mongoose.model('Users', userSchema);
+
 module.exports = Users;

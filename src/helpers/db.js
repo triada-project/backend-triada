@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 module.exports = {
   connect: async () => {
     let connection = await mongoose.connect(
-      'mongodb+srv://rudyramirezmorales:HGIc2IYs5VpStd0u@cluster0.ucuh1da.mongodb.net/triada',
+      'mongodb+srv://max-alejandro:0HPAZPwLveYddXzx@personal-cluster.ahpqh0t.mongodb.net/TriadaProject',
     );
     if (connection) console.log('Connected to database');
   },
