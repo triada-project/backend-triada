@@ -1,3 +1,4 @@
+//CARGADOR AUTOMATICO DE RUTAS
 //va a generar un router de manera dinamica
 const express = require('express');
 const router = express.Router();
