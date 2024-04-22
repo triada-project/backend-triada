@@ -4,7 +4,7 @@
   "description": "API Rest for Triada",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch . ./index.js",
+    "dev": "nodemon --watch . ./app.js",
     "start": "node index.js",
     "lint": "eslint"
   },
