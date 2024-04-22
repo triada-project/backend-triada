@@ -1,6 +1,6 @@
 const db = require('./src/helpers/db');
 const express = require('express');
-const router = require('./src/routes');
+const router = require('./src/routes/users');
 const app = express();
 const port = 3005;
 
@@ -9,9 +9,6 @@ app.use(express.json());
 
 app.use('/', router);
 
-// app.get('/', (req, res) => {
-//   res.send('Hola desde express');
-// });
 app.use((resp, req, res, next) => {
   res.status(resp.status).send(resp.send);
 });
