@@ -3,15 +3,11 @@ const addressSchema = require('./adressSchema');
 
 const eventSchema = new mongoose.Schema({
   eventType: {
-    type: Array,
+    type: String,
     required: true,
   },
   date: {
     type: Date,
-    required: true,
-  },
-  date: {
-    type: Number,
     required: true,
   },
   address: {
@@ -25,11 +21,11 @@ const eventSchema = new mongoose.Schema({
   },
   eventConfirmationCode: {
     type: Number,
-    required: true,
+    // required: true,
   },
   idStripePayment: {
     type: String,
-    required: true,
+    // required: true,
   },
   client: {
     type: mongoose.Schema.Types.ObjectId,
