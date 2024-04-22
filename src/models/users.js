@@ -68,6 +68,12 @@ const userSchema = new mongoose.Schema({
       return this.tipo === 'musico';
     },
   },
+  availability: {
+    type: Array,
+    required: function () {
+      return this.tipo === 'musico';
+    },
+  },
   description: String,
   multimedia: multimediaSchema,
   eventFee: {
