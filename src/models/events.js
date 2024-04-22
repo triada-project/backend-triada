@@ -1,27 +1,5 @@
 const mongoose = require('mongoose');
-
-const addressSchema = new mongoose.Schema({
-  city: {
-    type: String,
-    required: true,
-  },
-  town: {
-    type: String,
-    required: true,
-  },
-  street: {
-    type: String,
-    required: true,
-  },
-  exteriorNumber: {
-    type: String,
-    required: true,
-  },
-  neighborhood: {
-    type: String,
-    required: true,
-  },
-});
+const addressSchema = require('./adressSchema');
 
 const eventSchema = new mongoose.Schema({
   eventType: {
@@ -42,13 +20,14 @@ const eventSchema = new mongoose.Schema({
   },
   status: {
     type: String,
+    enum: ['agregar estatus'],
     required: true,
   },
   eventConfirmationCode: {
     type: Number,
     required: true,
   },
-  id_stripe_payment: {
+  idStripePayment: {
     type: String,
     required: true,
   },
