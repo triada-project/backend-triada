@@ -26,19 +26,19 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ['cliente', 'musico'],
-    required: true,
+    // required: true,
   },
   address: {
     type: addressSchema,
-    required: function () {
-      return this.tipo === 'musico';
-    },
+    // required: function () {
+    //   return this.tipo === 'musico';
+    // },
   },
   musicianType: {
     type: String,
-    required: function () {
-      return this.tipo === 'musico';
-    },
+    // required: function () {
+    //   return this.tipo === 'musico';
+    // },
     enum: {
       values: ['Banda', 'Solista'],
       message: '{VALUE} is not supported',
@@ -46,47 +46,47 @@ const userSchema = new mongoose.Schema({
   },
   eventType: {
     type: Array,
-    required: function () {
-      return this.tipo === 'musico';
-    },
+    // required: function () {
+    //   return this.tipo === 'musico';
+    // },
   },
   musicalGenre: {
     type: Array,
-    required: function () {
-      return this.tipo === 'musico';
-    },
+    // required: function () {
+    //   return this.tipo === 'musico';
+    // },
   },
   repertory: {
     type: Array,
-    required: function () {
-      return this.tipo === 'musico';
-    },
+    // required: function () {
+    //   return this.tipo === 'musico';
+    // },
   },
   requirements: {
     type: Array,
-    required: function () {
-      return this.tipo === 'musico';
-    },
+    // required: function () {
+    //   return this.tipo === 'musico';
+    // },
   },
   availability: {
     type: Array,
-    required: function () {
-      return this.tipo === 'musico';
-    },
+    // required: function () {
+    //   return this.tipo === 'musico';
+    // },
   },
   description: String,
   multimedia: multimediaSchema,
   eventFee: {
     type: Number,
-    required: function () {
-      return this.tipo === 'musico';
-    },
+    // required: function () {
+    //   return this.tipo === 'musico';
+    // },
   },
   maximumHoursEvent: {
     type: Number,
-    required: function () {
-      return this.tipo === 'musico';
-    },
+    // required: function () {
+    //   return this.tipo === 'musico';
+    // },
   },
   id_stripe: String,
 });
