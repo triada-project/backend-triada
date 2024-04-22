@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
+const URI = process.env.URI;
 
 module.exports = {
   connect: async () => {
-    let connection = await mongoose.connect(
-      'mongodb+srv://rudyramirezmorales:HGIc2IYs5VpStd0u@cluster0.ucuh1da.mongodb.net/triada',
-    );
+    let connection = await mongoose.connect(URI);
     if (connection) console.log('Connected to database');
   },
   disconnect: (done) => {
