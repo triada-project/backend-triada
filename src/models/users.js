@@ -1,15 +1,5 @@
 const mongoose = require('mongoose');
-
-const addressSchema = new mongoose.Schema({
-  city: {
-    type: String,
-    required: true,
-  },
-  town: {
-    type: String,
-    required: true,
-  },
-});
+const addressSchema = require('./adressSchema');
 
 const multimediaSchema = new mongoose.Schema({
   images: Array,
@@ -40,7 +30,9 @@ const userSchema = new mongoose.Schema({
   },
   address: {
     type: addressSchema,
-    required: true,
+    required: function () {
+      return this.tipo === 'musico';
+    },
   },
   musicianType: {
     type: String,
@@ -70,6 +62,12 @@ const userSchema = new mongoose.Schema({
       return this.tipo === 'musico';
     },
   },
+  requirements: {
+    type: Array,
+    required: function () {
+      return this.tipo === 'musico';
+    },
+  },
   description: String,
   multimedia: multimediaSchema,
   eventFee: {
@@ -78,7 +76,7 @@ const userSchema = new mongoose.Schema({
       return this.tipo === 'musico';
     },
   },
-  anticipationDays: {
+  maximumHoursEvent: {
     type: Number,
     required: function () {
       return this.tipo === 'musico';
