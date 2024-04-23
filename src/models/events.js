@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const addressSchema = new mongoose.Schema({
   state: String,
   country: String,
-  zipCode: String,
+  zipCode: Number,
   city: String,
   street: String,
   exteriorNumber: String,
