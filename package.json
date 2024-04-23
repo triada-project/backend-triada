@@ -4,7 +4,7 @@
   "description": "API Rest for Triada",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch . ./index.js",
+    "dev": "nodemon --watch . ./app.js",
     "start": "node index.js",
     "lint": "eslint"
   },
@@ -21,6 +21,7 @@
     "prettier": "^3.2.5"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mongoose": "^8.3.0",
