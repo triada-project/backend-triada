@@ -26,7 +26,10 @@ const eventSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    //enum: ['agregar estatus'],
+    enum: {
+      values: ['pendiente', 'activo', 'rechazado', 'finalizado'],
+      message: '{VALUE} is not supported',
+    },
     required: true,
   },
   eventConfirmationCode: {
