@@ -1,5 +1,15 @@
 const mongoose = require('mongoose');
-const addressSchema = require('./adressSchema');
+// const addressSchema = require('./adressSchema');
+
+const addressSchema = new mongoose.Schema({
+  state: String,
+  country: String,
+  zipCode: String,
+  city: String,
+  street: String,
+  exteriorNumber: String,
+  neighborhood: String,
+});
 
 const eventSchema = new mongoose.Schema({
   eventType: {
@@ -7,7 +17,7 @@ const eventSchema = new mongoose.Schema({
     required: true,
   },
   date: {
-    type: Date,
+    type: String,
     required: true,
   },
   address: {
@@ -16,7 +26,7 @@ const eventSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['agregar estatus'],
+    //enum: ['agregar estatus'],
     required: true,
   },
   eventConfirmationCode: {
@@ -30,12 +40,12 @@ const eventSchema = new mongoose.Schema({
   client: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'users',
-    required: true,
+    // required: true,
   },
   musician: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'users',
-    required: true,
+    // required: true,
   },
 });
 

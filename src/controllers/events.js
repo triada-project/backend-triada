@@ -1,5 +1,4 @@
 const Events = require('../models/events');
-const { post } = require('../routes');
 
 module.exports = {
   getById: async (req, res, next) => {
@@ -22,9 +21,10 @@ module.exports = {
   },
 
   post: async (req, res, next) => {
+    //res.send({ data: 'metodo post events' });
     try {
       let events = await Events.create(req.body);
-      next({ status: 201, send: { msg: 'Evento creado', data: events } });
+      next({ status: 201, send: { msg: 'Evento creado', data: { events } } });
     } catch (error) {
       next({ status: 400, send: { msg: 'Evento no creado' } });
     }

@@ -1,5 +1,15 @@
 const mongoose = require('mongoose');
-const addressSchema = require('./adressSchema');
+//const addressSchema = require('./adressSchema');
+
+const addressSchema = new mongoose.Schema({
+  state: String,
+  country: String,
+  zipCode: String,
+  city: String,
+  street: String,
+  exteriorNumber: String,
+  neighborhood: String,
+});
 
 const multimediaSchema = new mongoose.Schema({
   images: Array,
