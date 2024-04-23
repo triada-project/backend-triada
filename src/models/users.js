@@ -32,74 +32,74 @@ const userSchema = new mongoose.Schema({
     // required: [true, 'El password es requerido'],
     // match: /^(.){8,300}$/,
   },
-  
-  profilePicture: String,
-  role: {
-    type: String,
-    enum: ['cliente', 'musico'],
-    // required: true,
-  },
-  address: {
-    type: addressSchema,
-    // required: function () {
-    //   return this.tipo === 'musico';
-    // },
-  },
-  musicianType: {
-    type: String,
-    // required: function () {
-    //   return this.tipo === 'musico';
-    // },
-    enum: {
-      values: ['Banda', 'Solista'],
-      message: '{VALUE} is not supported',
-    },
-  },
-  eventType: {
-    type: Array,
-    // required: function () {
-    //   return this.tipo === 'musico';
-    // },
-  },
-  musicalGenre: {
-    type: Array,
-    // required: function () {
-    //   return this.tipo === 'musico';
-    // },
-  },
-  repertory: {
-    type: Array,
-    // required: function () {
-    //   return this.tipo === 'musico';
-    // },
-  },
-  requirements: {
-    type: Array,
-    // required: function () {
-    //   return this.tipo === 'musico';
-    // },
-  },
-  availability: {
-    type: Array,
-    // required: function () {
-    //   return this.tipo === 'musico';
-    // },
-  },
-  description: String,
-  multimedia: multimediaSchema,
-  eventFee: {
-    type: Number,
-    // required: function () {
-    //   return this.tipo === 'musico';
-    // },
-  },
-  maximumHoursEvent: {
-    type: Number,
-    // required: function () {
-    //   return this.tipo === 'musico';
-    // },
-  },
-  id_stripe: String,
+
+  // profilePicture: String,
+  // role: {
+  //   type: String,
+  //   enum: ['cliente', 'musico'],
+  //   // required: true,
+  // },
+  // address: {
+  //   type: addressSchema,
+  //   // required: function () {
+  //   //   return this.tipo === 'musico';
+  //   // },
+  // },
+  // musicianType: {
+  //   type: String,
+  //   // required: function () {
+  //   //   return this.tipo === 'musico';
+  //   // },
+  //   enum: {
+  //     values: ['Banda', 'Solista'],
+  //     message: '{VALUE} is not supported',
+  //   },
+  // },
+  // eventType: {
+  //   type: Array,
+  //   // required: function () {
+  //   //   return this.tipo === 'musico';
+  //   // },
+  // },
+  // musicalGenre: {
+  //   type: Array,
+  //   // required: function () {
+  //   //   return this.tipo === 'musico';
+  //   // },
+  // },
+  // repertory: {
+  //   type: Array,
+  //   // required: function () {
+  //   //   return this.tipo === 'musico';
+  //   // },
+  // },
+  // requirements: {
+  //   type: Array,
+  //   // required: function () {
+  //   //   return this.tipo === 'musico';
+  //   // },
+  // },
+  // availability: {
+  //   type: Array,
+  //   // required: function () {
+  //   //   return this.tipo === 'musico';
+  //   // },
+  // },
+  // description: String,
+  // multimedia: multimediaSchema,
+  // eventFee: {
+  //   type: Number,
+  //   // required: function () {
+  //   //   return this.tipo === 'musico';
+  //   // },
+  // },
+  // maximumHoursEvent: {
+  //   type: Number,
+  //   // required: function () {
+  //   //   return this.tipo === 'musico';
+  //   // },
+  // },
+  // id_stripe: String,
 });
 
 const Users = mongoose.model('Users', userSchema);

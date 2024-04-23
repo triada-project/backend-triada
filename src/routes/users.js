@@ -1,7 +1,5 @@
 const express = require('express');
 const userRouter = express.Router();
-const users = './src/db/user.json';
-const fs = require('fs');
 const userController = require('../controllers/users');
 
 userRouter.get('/', userController.getAll);
