@@ -1,4 +1,5 @@
 const Events = require('../models/events');
+const { handleHttpError } = require('../utils/handleError');
 
 module.exports = {
   getById: async (req, res, next) => {
@@ -8,6 +9,7 @@ module.exports = {
       next({ status: 200, send: { msg: 'Evento encontrado', data: events } });
     } catch (error) {
       next({ status: 400, send: { msg: 'Evento no encontrado' } });
+      handleHttpError(res, 'Evento no encontrado', 404);
     }
   },
 
@@ -17,6 +19,7 @@ module.exports = {
       next({ status: 200, send: { msg: 'Eventos encontrados', data: events } });
     } catch (error) {
       next({ status: 400, send: { msg: 'Eventos no encontrados' } });
+      handleHttpError(res, 'Eventos no encontrados', 404);
     }
   },
 
@@ -27,6 +30,7 @@ module.exports = {
       next({ status: 201, send: { msg: 'Evento creado', data: { events } } });
     } catch (error) {
       next({ status: 400, send: { msg: 'Evento no creado' } });
+      handleHttpError(res, 'Evento no creado', 404);
     }
   },
 
@@ -37,6 +41,7 @@ module.exports = {
       next({ status: 200, send: { msg: 'Evento eliminado', data: events } });
     } catch (error) {
       next({ status: 400, send: { msg: 'Evento no eliminado' } });
+      handleHttpError(res, 'Evento no eliminado', 404);
     }
   },
 
@@ -52,6 +57,7 @@ module.exports = {
       });
     } catch (error) {
       next({ status: 400, send: { msg: 'Evento no actualizado', err: error } });
+      handleHttpError(res, 'Evento no actualizado', 404);
     }
   },
 };
