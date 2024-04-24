@@ -53,7 +53,7 @@ module.exports = {
     try {
       const { id } = req.params;
       let user = await Users.findByIdAndDelete(id);
-      next({ status: 201, send: { msg: 'Usuario eliminado' } });
+      next({ status: 201, send: { msg: 'Usuario eliminado' }, data: user });
     } catch (error) {
       next({ status: 400, send: { msg: 'Usuario no eliminado', data: error } });
     }

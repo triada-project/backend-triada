@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const addressSchema = new mongoose.Schema({
   state: String,
   country: String,
-  zipCode: String,
+  zipCode: Number,
   city: String,
   street: String,
   exteriorNumber: String,
@@ -26,7 +26,10 @@ const eventSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    //enum: ['agregar estatus'],
+    enum: {
+      values: ['pendiente', 'activo', 'rechazado', 'finalizado'],
+      message: '{VALUE} is not supported',
+    },
     required: true,
   },
   eventConfirmationCode: {
