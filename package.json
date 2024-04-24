@@ -2,10 +2,10 @@
   "name": "backend-triada",
   "version": "1.0.0",
   "description": "API Rest for Triada",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "dev": "nodemon index.js",
-    "start": "node index.js",
+    "dev": "nodemon --watch . ./app.js",
+    "start": "node app.js",
     "lint": "eslint"
   },
   "keywords": [
@@ -21,8 +21,10 @@
     "prettier": "^3.2.5"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.0",
     "morgan": "^1.10.0"
   }
