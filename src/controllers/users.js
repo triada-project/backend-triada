@@ -1,4 +1,5 @@
 const Users = require('../models/users');
+const jwt = require('../helpers/jwt');
 
 module.exports = {
   getAll: async (req, res, next) => {
@@ -55,6 +56,19 @@ module.exports = {
       next({ status: 201, send: { msg: 'Usuario eliminado' } });
     } catch (error) {
       next({ status: 400, send: { msg: 'Usuario no eliminado', data: error } });
+    }
+  },
+  login: async (req, res, next) => {
+    try {
+      let user = await Users.findOne({ email: req.body.email });
+      if (user.password != req.body.password) {
+        next({ status: 401, send: { msg: 'Contraseña incorrecta' } });
+      }
+      // delete user.password;
+      let token = jwt.create(user);
+      next({ status: 200, send: { msg: 'Acceso autorizado', token: token } });
+    } catch (error) {
+      next({ status: 401, send: { msg: 'Acceso no autorizado', err: error } });
     }
   },
 };
