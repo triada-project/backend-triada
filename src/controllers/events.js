@@ -1,5 +1,6 @@
 const Events = require('../models/events');
 const { handleHttpError } = require('../utils/handleError');
+const { matchedData } = require('express-validator');
 
 module.exports = {
   getById: async (req, res, next) => {
@@ -26,11 +27,12 @@ module.exports = {
   post: async (req, res, next) => {
     //res.send({ data: 'metodo post events' });
     try {
-      let events = await Events.create(req.body);
+      const body = matchedData(req);
+      let events = await Events.create(body);
       next({ status: 201, send: { msg: 'Evento creado', data: { events } } });
     } catch (error) {
+      //handleHttpError(res, 'Evento no creado', 404);
       next({ status: 400, send: { msg: 'Evento no creado' } });
-      handleHttpError(res, 'Evento no creado', 404);
     }
   },
 
