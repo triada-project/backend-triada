@@ -1,22 +1,23 @@
 require('dotenv').config();
 const express = require('express');
+const morgan = require('morgan');
 const cors = require('cors');
+const routes = require('./src/routes/index');
 const app = express();
 const PORT = process.env.PORT || 5000;
-const db = require('./src/helpers/db.js');
-const router = require('./src/routes/index.js');
+const db = require('./src/helpers/db');
 
+db.connect();
 app.use(cors());
 
 app.use(express.json());
 
-app.use('/', router);
+app.use(morgan('dev'));
 
-db.connect();
+app.use('/', routes);
 
-app.get('/', (req, res) => {
-  res.status(200);
-  res.send('Hola desde express');
+app.use((resp, req, res, next) => {
+  res.status(resp.status).send(resp.send);
 });
 
 app.listen(PORT, () => {
