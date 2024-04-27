@@ -17,9 +17,11 @@ const client = new S3Client({
 
 async function uploadFile(file) {
   const stream = fs.createReadStream(file.tempFilePath);
+  const userId = _id; //'662b36a30fd23add7064652a';
+  const bin = `${userId}/${file.name}`;
   const uploadParams = {
     Bucket: AWS_BUCKET_NAME,
-    Key: file.name,
+    Key: bin,
     Body: stream,
   };
   const command = new PutObjectCommand(uploadParams);
