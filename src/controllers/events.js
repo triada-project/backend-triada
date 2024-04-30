@@ -1,6 +1,43 @@
 const Events = require('../models/events');
+const twilio = require('twilio');
 const { handleHttpError } = require('../utils/handleError');
 const { matchedData } = require('express-validator');
+
+function generarCodigoConfirmacion() {
+  return Math.random().toString(36).substr(2, 6).toUpperCase();
+}
+
+async function enviarCodigoPorSMS(
+  eventId,
+  telefonoCliente,
+  codigoConfirmacion,
+) {
+  try {
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken = process.env.TWILIO_AUTH_TOKEN;
+    const twilioNumber = process.env.TWILIO_NUMBER;
+
+    const client = twilio(accountSid, authToken);
+
+    const message = `Tu código de confirmación es ${codigoConfirmacion}`;
+
+    await client.messages.create({
+      body: message,
+      from: twilioNumber,
+      to: telefonoCliente,
+    });
+
+    console.log('Mensaje enviado con éxito.');
+
+    // Opcionalmente, puedes guardar el registro del mensaje enviado en la base de datos
+    // Esto puede ser útil para llevar un registro de los mensajes enviados
+    // Por ejemplo:
+    // await Events.findByIdAndUpdate(eventId, { $push: { smsLogs: { message, timestamp: Date.now() } } });
+  } catch (error) {
+    console.error('Error al enviar mensaje:', error);
+    throw new Error('Error al enviar mensaje');
+  }
+}
 
 module.exports = {
   getById: async (req, res, next) => {
@@ -35,6 +72,66 @@ module.exports = {
       next({ status: 400, send: { msg: 'Evento no creado' } });
     }
   },
+
+  solicitarCodigoConfirmacion: async (req, res, next) => {
+    const { eventId } = req.params;
+
+    try {
+      // Genera un nuevo código de confirmación
+      const codigoConfirmacion = generarCodigoConfirmacion();
+
+      // Actualiza el evento en la base de datos con el nuevo código de confirmación
+      await Events.findByIdAndUpdate(eventId, {
+        eventConfirmationCode: codigoConfirmacion,
+      });
+
+      // Encuentra el evento actualizado
+      const eventoActualizado = await Events.findById(eventId);
+
+      // Envía el código de confirmación al cliente por SMS
+      await enviarCodigoPorSMS(
+        eventId,
+        eventoActualizado.phoneClient,
+        codigoConfirmacion,
+      );
+
+      // Responde al cliente con éxito
+      res
+        .status(200)
+        .json({
+          msg: 'Código de confirmación solicitado y enviado al cliente',
+        });
+    } catch (error) {
+      // Maneja cualquier error y envía una respuesta adecuada
+      res
+        .status(500)
+        .json({ msg: 'Error al solicitar y enviar el código de confirmación' });
+    }
+  },
+
+  // sendConfirmationCode: async (req, res, next) => {
+  //   const { phone } = req.body;
+  //   const accountSid = process.env.TWILIO_ACCOUNT_SID;
+  //   const authToken = process.env.TWILIO_AUTH_TOKEN;
+  //   const client = twilio(accountSid, authToken);
+
+  //   try {
+  //     const code = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+  //     const message = `Tu código de confirmación es ${code}`;
+  //     await client.messages.create({
+  //       body: message,
+  //       from: process.env.TWILIO_PHONE_NUMBER,
+  //       to: phone,
+  //     });
+  //     next({
+  //       status: 200,
+  //       send: { msg: 'Código de confirmación enviado', data: code },
+  //     });
+  //   } catch (error) {
+  //     next({ status: 400, send: { msg: 'Código de confirmación no enviado' } });
+  //     handleHttpError(res, 'Código de confirmación no enviado', 404);
+  //   }
+  // },
 
   delete: async (req, res, next) => {
     const { id } = req.params;

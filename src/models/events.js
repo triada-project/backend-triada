@@ -24,8 +24,10 @@ const eventSchema = new mongoose.Schema({
     type: addressSchema,
     required: true,
   },
+  phoneClient: String,
   status: {
     type: String,
+    default: 'pendiente',
     enum: {
       values: ['pendiente', 'activo', 'rechazado', 'finalizado'],
       message: '{VALUE} is not supported',
@@ -33,7 +35,7 @@ const eventSchema = new mongoose.Schema({
     required: true,
   },
   eventConfirmationCode: {
-    type: Number,
+    type: String,
     // required: true,
   },
   idStripePayment: {

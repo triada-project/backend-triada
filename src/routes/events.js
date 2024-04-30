@@ -8,6 +8,10 @@ eventsRouter.get('/:id', eventController.getById);
 eventsRouter.post('/', validatorPostEvent, eventController.post);
 eventsRouter.put('/:id', eventController.put);
 eventsRouter.delete('/:id', eventController.delete);
+eventsRouter.post(
+  '/:eventId/solicitar-codigo-confirmacion',
+  eventController.solicitarCodigoConfirmacion,
+);
 
 // eventsRouter.get('/', (req, res) => {
 //   res.status(200).send('Hola desde events');
