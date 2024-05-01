@@ -19,7 +19,7 @@ async function enviarCodigoPorSMS(
 
     const client = twilio(accountSid, authToken);
 
-    const message = `Tu código de confirmación es ${codigoConfirmacion}`;
+    const message = `TRIADA - El código de confirmación para tu evento es ${codigoConfirmacion}. Compártelo al músico para iniciar tu evento.`;
 
     await client.messages.create({
       body: message,
@@ -96,11 +96,9 @@ module.exports = {
       );
 
       // Responde al cliente con éxito
-      res
-        .status(200)
-        .json({
-          msg: 'Código de confirmación solicitado y enviado al cliente',
-        });
+      res.status(200).json({
+        msg: 'Código de confirmación solicitado y enviado al cliente',
+      });
     } catch (error) {
       // Maneja cualquier error y envía una respuesta adecuada
       res
@@ -109,29 +107,33 @@ module.exports = {
     }
   },
 
-  // sendConfirmationCode: async (req, res, next) => {
-  //   const { phone } = req.body;
-  //   const accountSid = process.env.TWILIO_ACCOUNT_SID;
-  //   const authToken = process.env.TWILIO_AUTH_TOKEN;
-  //   const client = twilio(accountSid, authToken);
+  confirmarCodigoEvento: async (req, res, next) => {
+    const { eventId } = req.params;
+    const { codigoEvento } = req.body; // Se espera que el músico envíe el código del evento desde su dashboard
 
-  //   try {
-  //     const code = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
-  //     const message = `Tu código de confirmación es ${code}`;
-  //     await client.messages.create({
-  //       body: message,
-  //       from: process.env.TWILIO_PHONE_NUMBER,
-  //       to: phone,
-  //     });
-  //     next({
-  //       status: 200,
-  //       send: { msg: 'Código de confirmación enviado', data: code },
-  //     });
-  //   } catch (error) {
-  //     next({ status: 400, send: { msg: 'Código de confirmación no enviado' } });
-  //     handleHttpError(res, 'Código de confirmación no enviado', 404);
-  //   }
-  // },
+    try {
+      // Busca el evento en la base de datos
+      const evento = await Events.findById(eventId);
+
+      // Verifica si el código del evento coincide con el código de confirmación almacenado en la base de datos
+      if (evento.eventConfirmationCode === codigoEvento) {
+        // Cambia el estado del evento a "iniciado"
+        evento.status = 'iniciado';
+        await evento.save();
+
+        // Responde al músico con éxito
+        res
+          .status(200)
+          .json({ msg: 'El evento ha sido iniciado correctamente' });
+      } else {
+        // Si el código no coincide, responde con un error
+        res.status(400).json({ msg: 'El código de evento no es válido' });
+      }
+    } catch (error) {
+      // Maneja cualquier error y envía una respuesta adecuada
+      res.status(500).json({ msg: 'Error al confirmar el código de evento' });
+    }
+  },
 
   delete: async (req, res, next) => {
     const { id } = req.params;

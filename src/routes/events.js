@@ -12,6 +12,10 @@ eventsRouter.post(
   '/:eventId/solicitar-codigo-confirmacion',
   eventController.solicitarCodigoConfirmacion,
 );
+eventsRouter.post(
+  '/:eventId/confirmar-codigo-evento',
+  eventController.confirmarCodigoEvento,
+);
 
 // eventsRouter.get('/', (req, res) => {
 //   res.status(200).send('Hola desde events');

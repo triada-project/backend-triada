@@ -29,7 +29,7 @@ const eventSchema = new mongoose.Schema({
     type: String,
     default: 'pendiente',
     enum: {
-      values: ['pendiente', 'activo', 'rechazado', 'finalizado'],
+      values: ['pendiente', 'activo', 'rechazado', 'finalizado', 'iniciado'],
       message: '{VALUE} is not supported',
     },
     required: true,
