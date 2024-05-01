@@ -7,9 +7,9 @@ const { customAlphabet } = require('nanoid');
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const nanoid = customAlphabet(alphabet, 6);
 
-function generarCodigoConfirmacion() {
-  return Math.random().toString(36).substr(2, 6).toUpperCase();
-}
+// function generarCodigoConfirmacion() {
+//   return Math.random().toString(36).substr(2, 6).toUpperCase();
+// }
 
 async function enviarCodigoPorSMS(
   eventId,
