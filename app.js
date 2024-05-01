@@ -6,6 +6,7 @@ const routes = require('./src/routes/index');
 const app = express();
 const PORT = process.env.PORT || 5000;
 const db = require('./src/helpers/db');
+const fileUpload = require('express-fileupload');
 
 db.connect();
 app.use(cors());
@@ -13,6 +14,13 @@ app.use(cors());
 app.use(express.json());
 
 app.use(morgan('dev'));
+
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: './uploads',
+  }),
+);
 
 app.use('/', routes);
 
