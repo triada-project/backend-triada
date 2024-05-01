@@ -2,6 +2,10 @@ const Events = require('../models/events');
 const twilio = require('twilio');
 const { handleHttpError } = require('../utils/handleError');
 const { matchedData } = require('express-validator');
+const { customAlphabet } = require('nanoid');
+
+const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const nanoid = customAlphabet(alphabet, 6);
 
 function generarCodigoConfirmacion() {
   return Math.random().toString(36).substr(2, 6).toUpperCase();
@@ -78,7 +82,7 @@ module.exports = {
 
     try {
       // Genera un nuevo código de confirmación
-      const codigoConfirmacion = generarCodigoConfirmacion();
+      const codigoConfirmacion = nanoid();
 
       // Actualiza el evento en la base de datos con el nuevo código de confirmación
       await Events.findByIdAndUpdate(eventId, {
