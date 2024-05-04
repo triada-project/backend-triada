@@ -56,8 +56,9 @@ module.exports = {
   },
 
   getAll: async (req, res, next) => {
+    const musicianId = req.params.musicianId; // Obtener el ID del músico de los parámetros de la solicitud
     try {
-      let events = await Events.find();
+      let events = await Events.find({ musician: musicianId });
       next({ status: 200, send: { msg: 'Eventos encontrados', data: events } });
     } catch (error) {
       next({ status: 400, send: { msg: 'Eventos no encontrados' } });
