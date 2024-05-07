@@ -1,32 +1,69 @@
-const stripe = require('stripe')('sk_test_51P4oMODoqexf69WmNIX7SWam7twBN8OmN2QZBtEuGc5PQWqghVmzcU0V6fMyL13wMpwvGQtac9MiIGr8w9BV7bNx00iLyFehLZ');
+const stripe = require("stripe")('sk_test_51P4oMODoqexf69WmNIX7SWam7twBN8OmN2QZBtEuGc5PQWqghVmzcU0V6fMyL13wMpwvGQtac9MiIGr8w9BV7bNx00iLyFehLZ');
 
-const YOUR_DOMAIN = 'http://localhost:3005';
-
-const createCheckoutSession = async (req, res) => {
-    const session = await stripe.checkout.sessions.create({
-
-      line_items: [
-
-        {
-          // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-
-          //price: 'price_1P8Rv9Doqexf69Wm1493LmQ8',
-          price: 'price_1P8SLDDoqexf69WmDZmiIVQJ',
-          quantity: 1,
-        },
-      ],
-      //mode: 'payment',
-      mode: 'subscription',
-      //success_url: `${YOUR_DOMAIN}?success=true`,
-      success_url: 'http://localhost:5000/stripeSuccess',
-      //cancel_url: `${YOUR_DOMAIN}?canceled=true`,
-      cancel_url: 'http://localhost:5000/stripeCancel',
-    });
-
-    res.redirect(303, session.url);
+const calculateOrderAmount = (items) => {
+  // Replace this constant with a calculation of the order's amount
+  // Calculate the order total on the server to prevent
+  // people from directly manipulating the amount on the client
+  return 1400;
 };
 
-module.exports = { post: createCheckoutSession };
+const createPaymentIntent = async (req, res) => {
+  const { items } = req.body;
+
+  // Create a PaymentIntent with the order amount and currency
+  const paymentIntent = await stripe.paymentIntents.create({
+    //amount: calculateOrderAmount(items),
+    amount: 999,
+    currency: 'usd',
+    description: 'Example charge',
+    source: token,
+    capture: false,
+    currency: "mxn",
+    // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+  });
+};
+
+module.exports = { createPaymentIntent };
+
+
+
+
+// const stripe = require('stripe')('sk_test_51P4oMODoqexf69WmNIX7SWam7twBN8OmN2QZBtEuGc5PQWqghVmzcU0V6fMyL13wMpwvGQtac9MiIGr8w9BV7bNx00iLyFehLZ');
+
+// const YOUR_DOMAIN = 'http://localhost:3005';
+
+// const createCheckoutSession = async (req, res) => {
+//     const session = await stripe.checkout.sessions.create({
+
+//       line_items: [
+
+//         {
+//           // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+
+//           //price: 'price_1P8Rv9Doqexf69Wm1493LmQ8',
+//           price: 'price_1P8SLDDoqexf69WmDZmiIVQJ',
+//           quantity: 1,
+//         },
+//       ],
+//       //mode: 'payment',
+//       mode: 'subscription',
+//       //success_url: `${YOUR_DOMAIN}?success=true`,
+//       success_url: 'http://localhost:5000/stripeSuccess',
+//       //cancel_url: `${YOUR_DOMAIN}?canceled=true`,
+//       cancel_url: 'http://localhost:5000/stripeCancel',
+//     });
+
+//     res.redirect(303, session.url);
+// };
+
+// module.exports = { post: createCheckoutSession };
 
 
 

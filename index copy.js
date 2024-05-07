@@ -16,7 +16,8 @@ app.use(express.json());
 //app.use(createSession)
 app.use('/',routes);
 
-app.post('/create-checkout-session', payMentController.post)
+//app.post('/create-checkout-session', payMentController.post)
+app.post('/create-payment-intent', payMentController.createPaymentIntent);
 
 
 
