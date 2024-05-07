@@ -28,6 +28,8 @@
     "express-fileupload": "^1.5.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "node": "^18.20.2",
+    "stripe": "^15.3.0"
   }
 }
