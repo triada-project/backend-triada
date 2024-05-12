@@ -123,7 +123,7 @@ module.exports = {
       // Verifica si el código del evento coincide con el código de confirmación almacenado en la base de datos
       if (evento.eventConfirmationCode === codigoEvento) {
         // Cambia el estado del evento a "iniciado"
-        evento.status = 'iniciado';
+        evento.status = 'finalizado';
         await evento.save();
 
         // Responde al músico con éxito

@@ -16,6 +16,14 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  startHour: {
+    type: String,
+    required: true,
+  },
+  endHour: {
+    type: String,
+    required: true,
+  },
   date: {
     type: String,
     required: true,
@@ -29,7 +37,7 @@ const eventSchema = new mongoose.Schema({
     type: String,
     default: 'pendiente',
     enum: {
-      values: ['pendiente', 'activo', 'rechazado', 'finalizado', 'iniciado'],
+      values: ['pendiente', 'aceptado', 'rechazado', 'finalizado', 'iniciado'],
       message: '{VALUE} is not supported',
     },
     required: true,
