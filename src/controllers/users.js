@@ -15,6 +15,10 @@ const sendVerificationEmail = async (email) => {
         channel: 'email',
         channelConfiguration: {
           template_id: 'd-7596721b285940709a118c0a42f6f0d7',
+          dynamic_template_data: {
+            to: email,
+            // Puedes añadir más campos de tu plantilla aquí
+          },
           from: 'Administracion@triada.rocks',
           from_name: 'Administracion Triada',
         },
@@ -25,6 +29,30 @@ const sendVerificationEmail = async (email) => {
     throw new Error('Failed to send verification email');
   }
 };
+
+// const sendVerificationEmail = async (email) => {
+//   try {
+//     const verification = await client.verify.v2
+//       .services(serviceSid)
+//       .verifications.create({
+//         to: email,
+//         channel: 'email',
+//         channelConfiguration: {
+//           template_id: 'd-7596721b285940709a118c0a42f6f0d7',
+//           dynamic_template_data: {
+//             verify_url: `http://localhost:4000/users/signup/email/verify?token={{twilio_code}}&email=${encodeURIComponent(email)}`,
+//             // Otros datos dinámicos para la plantilla de SendGrid
+//           },
+//           from: 'Administracion@triada.rocks',
+//           from_name: 'Administracion Triada',
+//         },
+//       });
+//     return verification;
+//   } catch (error) {
+//     console.error('Error sending verification email:', error);
+//     throw new Error('Failed to send verification email');
+//   }
+// };
 
 module.exports = {
   getAll: async (req, res, next) => {
@@ -99,6 +127,35 @@ module.exports = {
       next({ status: 200, send: { msg: 'Acceso autorizado', token: token } });
     } catch (error) {
       next({ status: 401, send: { msg: 'Acceso no autorizado', err: error } });
+    }
+  },
+
+  verifyEmail: async (req, res, next) => {
+    const { token, email } = req.query; // Cambiado a req.query
+
+    try {
+      // Verificar el token utilizando Twilio
+      const verificationCheck = await client.verify.v2
+        .services(serviceSid)
+        .verificationChecks.create({ to: email, code: token }); // Usar email de req.query
+
+      if (verificationCheck.status === 'approved') {
+        // Actualizar el estado del usuario en la base de datos
+        let user = await Users.findOneAndUpdate(
+          { email: email },
+          { emailVerified: true },
+          { new: true },
+        );
+        next({ status: 200, send: { msg: 'Email verificado', data: user } });
+      } else {
+        next({ status: 400, send: { msg: 'Verificación de email fallida' } });
+      }
+    } catch (error) {
+      console.error('Error verifying email:', error);
+      next({
+        status: 500,
+        send: { msg: 'Error interno del servidor', err: error },
+      });
     }
   },
 };
