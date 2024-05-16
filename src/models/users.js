@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
     match: /^(.){8,300}$/,
   },
   emailVerified: { type: Boolean, default: false },
-
+  verificationToken: { type: String },
   profilePicture: String,
   role: {
     type: String,

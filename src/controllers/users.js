@@ -5,6 +5,10 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const serviceSid = process.env.TWILIO_VERIFY_SERVICE_SID;
 const client = require('twilio')(accountSid, authToken);
+const sendGridApiKey = process.env.SENDGRID_API_KEY;
+const sgMail = require('@sendgrid/mail');
+
+sgMail.setApiKey(sendGridApiKey);
 
 const sendVerificationEmail = async (email) => {
   try {
@@ -82,10 +86,22 @@ module.exports = {
   post: async (req, res, next) => {
     try {
       let user = await Users.create(req.body);
-      // Enviar el correo de verificación
-      const email = user.email;
-      const verification = await sendVerificationEmail(email);
-      console.log(`Verification SID: ${verification.sid}`);
+      // Generar token de verificación (JWT o UUID)
+      const verificationToken = jwt.create({ userId: user._id }); // O usar uuid
+      user.verificationToken = verificationToken;
+      await user.save();
+
+      // Enviar correo con SendGrid
+      const msg = {
+        to: user.email,
+        from: 'Administracion@triada.rocks',
+        subject: 'Verifica tu correo electrónico',
+        templateId: 'd-7596721b285940709a118c0a42f6f0d7',
+        dynamicTemplateData: {
+          verify_url: `http://localhost:4000/users/signup/email/verify?token=${verificationToken}&id=${user._id}`,
+        },
+      };
+      await sgMail.send(msg);
 
       next({ status: 201, send: { msg: 'Usuario creado', data: { user } } });
     } catch (error) {
@@ -131,22 +147,18 @@ module.exports = {
   },
 
   verifyEmail: async (req, res, next) => {
-    const { token, email } = req.query; // Cambiado a req.query
+    const { token, id } = req.query;
 
     try {
-      // Verificar el token utilizando Twilio
-      const verificationCheck = await client.verify.v2
-        .services(serviceSid)
-        .verificationChecks.create({ to: email, code: token }); // Usar email de req.query
+      // Busca el user en la base de datos
+      const user = await Users.findById(id);
 
-      if (verificationCheck.status === 'approved') {
+      if (user.verificationToken === token) {
         // Actualizar el estado del usuario en la base de datos
-        let user = await Users.findOneAndUpdate(
-          { email: email },
-          { emailVerified: true },
-          { new: true },
-        );
-        next({ status: 200, send: { msg: 'Email verificado', data: user } });
+
+        (user.emailVerified = true),
+          await user.save(),
+          next({ status: 200, send: { msg: 'Email verificado', data: user } });
       } else {
         next({ status: 400, send: { msg: 'Verificación de email fallida' } });
       }
@@ -158,4 +170,33 @@ module.exports = {
       });
     }
   },
+
+  // verifyEmail: async (req, res, next) => {
+  //   const { token, email } = req.query; // Cambiado a req.query
+
+  //   try {
+  //     // Verificar el token utilizando Twilio
+  //     const verificationCheck = await client.verify.v2
+  //       .services(serviceSid)
+  //       .verificationChecks.create({ to: email, code: token }); // Usar email de req.query
+
+  //     if (verificationCheck.status === 'approved') {
+  //       // Actualizar el estado del usuario en la base de datos
+  //       let user = await Users.findOneAndUpdate(
+  //         { email: email },
+  //         { emailVerified: true },
+  //         { new: true },
+  //       );
+  //       next({ status: 200, send: { msg: 'Email verificado', data: user } });
+  //     } else {
+  //       next({ status: 400, send: { msg: 'Verificación de email fallida' } });
+  //     }
+  //   } catch (error) {
+  //     console.error('Error verifying email:', error);
+  //     next({
+  //       status: 500,
+  //       send: { msg: 'Error interno del servidor', err: error },
+  //     });
+  //   }
+  // },
 };
