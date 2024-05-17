@@ -43,7 +43,7 @@ app.post('/account_link', async (req, res) => {
 
     const accountLink = await stripe.accountLinks.create({
       account: account,
-      return_url: `${req.headers.origin}/stepper/return/${account}`,
+      return_url: `${req.headers.origin}/stepper/finalizar/${account}`,
       refresh_url: `${req.headers.origin}/stepper/refresh/${account}`,
       type: 'account_onboarding',
     });

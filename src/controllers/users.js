@@ -50,7 +50,7 @@ module.exports = {
         subject: 'Verifica tu correo electrónico',
         templateId: 'd-7596721b285940709a118c0a42f6f0d7',
         dynamicTemplateData: {
-          verify_url: `http://localhost:3500/users/signup/email/verify?token=${verificationToken}&id=${user._id}`,
+          verify_url: `http://localhost:4000/users/signup/email/verify?token=${verificationToken}&id=${user._id}`,
         },
       };
       await sgMail.send(msg);
