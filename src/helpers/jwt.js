@@ -4,9 +4,13 @@ const Users = require('../models/users');
 
 module.exports = {
   create: (data) => {
-    let token = jwt.sign({ _id: data._id, email: data.email }, JWT_SECRET, {
-      expiresIn: 6000,
-    });
+    let token = jwt.sign(
+      { _id: data._id, email: data.email, name: data.name, role: data.role },
+      JWT_SECRET,
+      {
+        expiresIn: 6000,
+      },
+    );
     return token;
   },
 
