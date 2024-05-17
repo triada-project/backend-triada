@@ -23,7 +23,7 @@
   "dependencies": {
     "@slack/webhook": "^7.0.2",
     "express-validator": "^7.0.1",
-    "morgan-body": "^2.6.9"
+    "morgan-body": "^2.6.9",
     "@aws-sdk/client-s3": "^3.563.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
