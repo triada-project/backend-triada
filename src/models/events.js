@@ -44,7 +44,7 @@ const eventSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  payment: {
+  eventFee: {
     type: Number,
     required: true,
   },
