@@ -20,6 +20,14 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  startHour: {
+    type: String,
+    required: true,
+  },
+  endHour: {
+    type: String,
+    required: true,
+  },
   date: {
     type: String,
     required: false,
@@ -53,17 +61,18 @@ const eventSchema = new mongoose.Schema({
     default: false,
     required: false,
   },
+  phoneClient: String,
   status: {
     type: String,
     default: 'pendiente',
     enum: {
-      values: ['pendiente', 'activo', 'rechazado', 'finalizado'],
+      values: ['pendiente', 'aceptado', 'rechazado', 'finalizado', 'iniciado'],
       message: '{VALUE} is not supported',
     },
     required: false,
   },
   eventConfirmationCode: {
-    type: Number,
+    type: String,
     // required: true,
   },
   idStripePayment: {

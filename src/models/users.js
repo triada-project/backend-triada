@@ -40,8 +40,20 @@ const userSchema = new mongoose.Schema({
     enum: ['cliente', 'musico'],
     required: true,
   },
-  address: {
-    type: addressSchema,
+  // address: {
+  //   type: addressSchema,
+  //   required: function () {
+  //     return this.role === 'musico';
+  //   },
+  // },
+  state: {
+    type: String,
+    required: function () {
+      return this.role === 'musico';
+    },
+  },
+  city: {
+    type: String,
     required: function () {
       return this.role === 'musico';
     },
@@ -112,6 +124,9 @@ userSchema.pre('save', function (next) {
   if (this.role === 'cliente') {
     // Eliminar los campos específicos de "músico"
     this.musicianType = undefined;
+    this.address = undefined;
+    this.state = undefined;
+    this.city = undefined;
     this.eventType = undefined;
     this.musicalGenre = undefined;
     this.repertory = undefined;
