@@ -1,17 +1,21 @@
 const mongoose = require('mongoose');
-// const addressSchema = require('./adressSchema');
+//const addressSchema = require('./adressSchema');
 
 const addressSchema = new mongoose.Schema({
   state: String,
-  country: String,
-  zipCode: Number,
+  zipCode: String,
   city: String,
   street: String,
   exteriorNumber: String,
-  neighborhood: String,
+  interiorNumber: String,
+  neighbourhood: String,
 });
 
 const eventSchema = new mongoose.Schema({
+  eventName: {
+    type: String,
+    required: true,
+  },
   eventType: {
     type: String,
     required: true,
@@ -24,8 +28,35 @@ const eventSchema = new mongoose.Schema({
     type: addressSchema,
     required: true,
   },
+  phoneClient: {
+    type: String,
+    required: true,
+  },
+  startHour: {
+    type: String,
+    required: true,
+  },
+  endHour: {
+    type: String,
+    required: true,
+  },
+  totalHours: {
+    type: Number,
+    required: true,
+  },
+  eventFee: {
+    type: Number,
+    required: true,
+  },
+  isChecked: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+
   status: {
     type: String,
+    default: 'pendiente',
     enum: {
       values: ['pendiente', 'activo', 'rechazado', 'finalizado'],
       message: '{VALUE} is not supported',
@@ -48,6 +79,14 @@ const eventSchema = new mongoose.Schema({
   musician: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'users',
+    // required: true,
+  },
+  objectClient: {
+    type: Object,
+    // required: true,
+  },
+  objectMusician: {
+    type: Object,
     // required: true,
   },
 });

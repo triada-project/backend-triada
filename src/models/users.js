@@ -12,9 +12,9 @@ const addressSchema = new mongoose.Schema({
   neighborhood: String,
 });
 
-const multimediaSchema = new mongoose.Schema({
-  images: Array,
-  videos: Array,
+const imageSchema = new mongoose.Schema({
+  keyImage: String,
+  URLImage: String,
 });
 
 const userSchema = new mongoose.Schema({
@@ -34,18 +34,20 @@ const userSchema = new mongoose.Schema({
     match: /^(.){8,300}$/,
   },
 
-  profilePicture: String,
+  profilePicture: imageSchema,
   role: {
     type: String,
     enum: ['cliente', 'musico'],
     required: true,
   },
-  address: {
-    type: addressSchema,
-    required: function () {
-      return this.role === 'musico';
-    },
-  },
+  images: [imageSchema],
+  videos: Array,
+  // address: {
+  //   type: addressSchema,
+  //   required: function () {
+  //     return this.role === 'musico';
+  //   },
+  // },
   musicianType: {
     type: String,
     required: function () {
@@ -92,7 +94,7 @@ const userSchema = new mongoose.Schema({
     },
   },
   description: String,
-  multimedia: multimediaSchema,
+
   eventFee: {
     type: Number,
     required: function () {
