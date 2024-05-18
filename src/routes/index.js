@@ -1,3 +1,4 @@
+
 //CARGADOR AUTOMATICO DE RUTAS
 //va a generar un router de manera dinamica
 const express = require('express');
@@ -14,6 +15,7 @@ const removeExtension = (fileName) => {
 
 //fs par leer todos los archivos que estan dentro de la ruta en la que me encuentro sitiado, la ruta relativa a mi script
 fs.readdirSync(pathRouter).filter((file) => {
+
   const fileWithOutExt = removeExtension(file);
   const skip = ['index'].includes(fileWithOutExt);
   if (!skip) {

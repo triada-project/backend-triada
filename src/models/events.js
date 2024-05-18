@@ -12,9 +12,13 @@ const addressSchema = new mongoose.Schema({
 });
 
 const eventSchema = new mongoose.Schema({
+  eventName: {
+    type: String,
+    required: false,
+  },
   eventType: {
     type: String,
-    required: true,
+    required: false,
   },
   startHour: {
     type: String,
@@ -26,11 +30,36 @@ const eventSchema = new mongoose.Schema({
   },
   date: {
     type: String,
-    required: true,
+    required: false,
   },
   address: {
     type: addressSchema,
-    required: true,
+    required: false,
+  },
+  phoneClient: {
+    type: String,
+    required: false,
+  },
+  startHour: {
+    type: String,
+    required: false,
+  },
+  endHour: {
+    type: String,
+    required: false,
+  },
+  totalHours: {
+    type: Number,
+    required: false,
+  },
+  eventFee: {
+    type: Number,
+    required: false,
+  },
+  isChecked: {
+    type: Boolean,
+    default: false,
+    required: false,
   },
   phoneClient: String,
   status: {
@@ -40,7 +69,7 @@ const eventSchema = new mongoose.Schema({
       values: ['pendiente', 'aceptado', 'rechazado', 'finalizado', 'iniciado'],
       message: '{VALUE} is not supported',
     },
-    required: true,
+    required: false,
   },
   eventConfirmationCode: {
     type: String,
@@ -60,7 +89,16 @@ const eventSchema = new mongoose.Schema({
     ref: 'users',
     // required: true,
   },
+  objectClient: {
+    type: Object,
+    // required: true,
+  },
+  objectMusician: {
+    type: Object,
+    // required: true,
+  },
 });
+
 
 const Events = mongoose.model('Events', eventSchema);
 module.exports = Events;
