@@ -49,21 +49,21 @@ const userSchema = new mongoose.Schema({
   // },
   state: {
     type: String,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
   },
   city: {
     type: String,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
   },
   musicianType: {
     type: String,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
     enum: {
       values: ['Banda', 'Solista'],
       message: '{VALUE} is not supported',
@@ -72,51 +72,51 @@ const userSchema = new mongoose.Schema({
   eventType: {
     type: Array,
     sparse: true,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
   },
   musicalGenre: {
     type: Array,
     sparse: true,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
   },
   repertory: {
     type: Array,
     sparse: true,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
   },
   requirements: {
     type: Array,
     sparse: true,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
   },
   availability: {
     type: Array,
     sparse: true,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
   },
   description: String,
   multimedia: multimediaSchema,
   eventFee: {
     type: Number,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
   },
   maximumHoursEvent: {
     type: Number,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
   },
   id_stripe: String,
 });
