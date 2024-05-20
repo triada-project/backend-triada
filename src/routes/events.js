@@ -5,7 +5,8 @@ const eventController = require('../controllers/events');
 
 eventsRouter.get('/:musicianId/events', eventController.getAll);
 eventsRouter.get('/:id', eventController.getById);
-eventsRouter.post('/', validatorPostEvent, eventController.post);
+//eventsRouter.post('/', validatorPostEvent, eventController.post);
+eventsRouter.post('/', eventController.post);
 eventsRouter.put('/:id', eventController.put);
 eventsRouter.delete('/:id', eventController.delete);
 eventsRouter.post(

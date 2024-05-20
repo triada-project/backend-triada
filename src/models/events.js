@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 
 const addressSchema = new mongoose.Schema({
   state: String,
-  country: String,
   zipCode: Number,
   city: String,
   street: String,
@@ -19,14 +18,6 @@ const eventSchema = new mongoose.Schema({
   eventType: {
     type: String,
     required: false,
-  },
-  startHour: {
-    type: String,
-    required: true,
-  },
-  endHour: {
-    type: String,
-    required: true,
   },
   date: {
     type: String,
@@ -61,18 +52,17 @@ const eventSchema = new mongoose.Schema({
     default: false,
     required: false,
   },
-  phoneClient: String,
   status: {
     type: String,
     default: 'pendiente',
     enum: {
-      values: ['pendiente', 'aceptado', 'rechazado', 'finalizado', 'iniciado'],
+      values: ['pendiente', 'activo', 'rechazado', 'finalizado'],
       message: '{VALUE} is not supported',
     },
     required: false,
   },
   eventConfirmationCode: {
-    type: String,
+    type: Number,
     // required: true,
   },
   idStripePayment: {
@@ -98,7 +88,6 @@ const eventSchema = new mongoose.Schema({
     // required: true,
   },
 });
-
 
 const Events = mongoose.model('Events', eventSchema);
 module.exports = Events;

@@ -69,7 +69,8 @@ module.exports = {
   post: async (req, res, next) => {
     //res.send({ data: 'metodo post events' });
     try {
-      const body = matchedData(req);
+      //const body = matchedData(req);
+      const body = req.body;
       let events = await Events.create(body);
       next({ status: 201, send: { msg: 'Evento creado', data: { events } } });
     } catch (error) {
