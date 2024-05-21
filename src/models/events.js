@@ -56,13 +56,13 @@ const eventSchema = new mongoose.Schema({
     type: String,
     default: 'pendiente',
     enum: {
-      values: ['pendiente', 'activo', 'rechazado', 'finalizado'],
+      values: ['pendiente', 'aceptado', 'rechazado', 'finalizado'],
       message: '{VALUE} is not supported',
     },
     required: false,
   },
   eventConfirmationCode: {
-    type: Number,
+    type: String,
     // required: true,
   },
   idStripePayment: {

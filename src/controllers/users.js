@@ -87,8 +87,11 @@ module.exports = {
   login: async (req, res, next) => {
     try {
       let user = await Users.findOne({ email: req.body.email });
+      if (!user.emailVerified) {
+        next({ status: 400, send: { msg: 'Cuenta no validada' } });
+      }
       if (user.password != req.body.password) {
-        next({ status: 401, send: { msg: 'Contraseña incorrecta' } });
+        next({ status: 401, send: { msg: 'Credenciales incorrectas' } });
       }
       // delete user.password;
       let token = jwt.create(user);

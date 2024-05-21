@@ -38,6 +38,7 @@ async function enviarCodigoPorSMS(
     // Por ejemplo:
     // await Events.findByIdAndUpdate(eventId, { $push: { smsLogs: { message, timestamp: Date.now() } } });
   } catch (error) {
+    console.error(error);
     console.error('Error al enviar mensaje:', error);
     throw new Error('Error al enviar mensaje');
   }
@@ -107,6 +108,7 @@ module.exports = {
       });
     } catch (error) {
       // Maneja cualquier error y envía una respuesta adecuada
+      console.error(error);
       res
         .status(500)
         .json({ msg: 'Error al solicitar y enviar el código de confirmación' });
