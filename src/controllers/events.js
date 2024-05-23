@@ -23,7 +23,7 @@ async function enviarCodigoPorSMS(
 
     const client = twilio(accountSid, authToken);
 
-    const message = `TRIADA - El código de confirmación para tu evento es ${codigoConfirmacion}. Compártelo al músico para iniciar tu evento.`;
+    const message = `TRIADA - El código de confirmación para tu evento es ${codigoConfirmacion}. Compártelo al músico para finalizar el pago.`;
 
     await client.messages.create({
       body: message,
