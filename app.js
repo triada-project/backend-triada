@@ -137,15 +137,17 @@ app.post('/create-payment-intent', async (req, res) => {
     // }
 
     const totalAmount = eventFee * 100;
+    const triadaFee = (totalAmount * 0.3).toFixed(0);
     console.log(totalAmount);
+    console.log(triadaFee);
     console.log(event.musician.toString());
 
     const paymentIntent = await stripe.paymentIntents.create({
       currency: 'MXN',
-      amount: eventFee,
+      amount: totalAmount,
       automatic_payment_methods: { enabled: true },
       capture_method: 'manual',
-      application_fee_amount: 123,
+      application_fee_amount: triadaFee,
       transfer_data: {
         destination: musicianData.id_stripe,
       },
