@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const addressSchema = new mongoose.Schema({
   state: String,
-  zipCode: String,
+  zipCode: Number,
   city: String,
   street: String,
   exteriorNumber: String,
@@ -14,57 +14,56 @@ const addressSchema = new mongoose.Schema({
 const eventSchema = new mongoose.Schema({
   eventName: {
     type: String,
-    required: true,
+    required: false,
   },
   eventType: {
     type: String,
-    required: true,
+    required: false,
   },
   date: {
     type: String,
-    required: true,
+    required: false,
   },
   address: {
     type: addressSchema,
-    required: true,
+    required: false,
   },
   phoneClient: {
     type: String,
-    required: true,
+    required: false,
   },
   startHour: {
     type: String,
-    required: true,
+    required: false,
   },
   endHour: {
     type: String,
-    required: true,
+    required: false,
   },
   totalHours: {
     type: Number,
-    required: true,
+    required: false,
   },
   eventFee: {
     type: Number,
-    required: true,
+    required: false,
   },
   isChecked: {
     type: Boolean,
     default: false,
-    required: true,
+    required: false,
   },
-
   status: {
     type: String,
     default: 'pendiente',
     enum: {
-      values: ['pendiente', 'activo', 'rechazado', 'finalizado'],
+      values: ['pendiente', 'aceptado', 'rechazado', 'finalizado'],
       message: '{VALUE} is not supported',
     },
-    required: true,
+    required: false,
   },
   eventConfirmationCode: {
-    type: Number,
+    type: String,
     // required: true,
   },
   idStripePayment: {
