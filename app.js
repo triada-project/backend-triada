@@ -137,7 +137,7 @@ app.post('/create-payment-intent', async (req, res) => {
     // }
 
     const totalAmount = eventFee * 100;
-    const triadaFee = (totalAmount * 0.3).toFixed(0);
+    const triadaFee = (totalAmount * 0.1).toFixed(0);
     console.log(totalAmount);
     console.log(triadaFee);
     console.log(event.musician.toString());
