@@ -106,6 +106,10 @@ const userSchema = new mongoose.Schema({
   },
   description: String,
 
+  images: Array,
+
+  videos: Array,
+
   eventFee: {
     type: Number,
     // required: function () {
