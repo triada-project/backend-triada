@@ -12,6 +12,7 @@ const payMentController = require('./src/controllers/paymentController.js');
 const db = require('./src/helpers/db');
 const stripeConnect = require('stripe')(
   // This is your test secret API key.
+  //process.env.STRIPE_SECRET_KEY,
   'sk_test_51PF8FkP5DUIoEtib5wFs7y3NDalsSF5eErPf7azm2n2YmJNsImhupj2l5sypVAmvDlV68N4TV12XLFrbFOYYJMMT00Kof8BlR8',
   {
     apiVersion: '2023-10-16',
