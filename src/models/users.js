@@ -105,6 +105,10 @@ const userSchema = new mongoose.Schema({
     // },
   },
   description: String,
+  phoneMusician: {
+    type: String,
+    required: false,
+  },
   multimedia: multimediaSchema,
   eventFee: {
     type: Number,
@@ -136,6 +140,8 @@ userSchema.pre('save', function (next) {
     this.eventFee = undefined;
     this.maximumHoursEvent = undefined;
     this.id_stripe = undefined;
+    this.description = undefined;
+    this.phoneMusician = undefined;
   }
   next();
 });
