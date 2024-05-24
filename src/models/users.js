@@ -140,6 +140,8 @@ userSchema.pre('save', function (next) {
     this.eventFee = undefined;
     this.maximumHoursEvent = undefined;
     this.id_stripe = undefined;
+    this.images = undefined;
+    this.videos = undefined;
   }
   next();
 });
