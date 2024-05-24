@@ -183,13 +183,43 @@ module.exports = {
 
   put: async (req, res, next) => {
     const { id } = req.params;
+
     try {
-      let updatedEvents = await Events.findByIdAndUpdate(id, req.body, {
+      const event = await Events.findById(id);
+      const userClient = await Users.findById(event.client);
+      const userMusician = await Users.findById(event.musician);
+      console.log(userClient);
+      console.log(userMusician);
+      // 1. Actualiza el evento y obtén el documento actualizado
+      const updatedEvent = await Events.findByIdAndUpdate(id, req.body, {
         new: true,
       });
+      if (updatedEvent.status === 'rechazado') {
+        const msg = {
+          to: userClient.email,
+          from: 'Administracion@triada.rocks',
+          subject: 'TRIADA - Evento no aceptado :(',
+          templateId: 'd-4a4d8278dfe944b7bdfec926ecaf10c9',
+          // dynamicTemplateData: {
+          //   verify_url: `http://localhost:3000/`,
+          // },
+        };
+        await sgMail.send(msg);
+      } else if (updatedEvent.status === 'aceptado') {
+        const msg = {
+          to: userClient.email,
+          from: 'Administracion@triada.rocks',
+          subject: 'TRIADA - Evento aceptado :)',
+          templateId: 'd-d8224d499a734199b3a0d64ebd99babe',
+          dynamicTemplateData: {
+            musico: userMusician.name,
+          },
+        };
+        await sgMail.send(msg);
+      }
       next({
         status: 200,
-        send: { msg: 'Evento actualizado', data: updatedEvents },
+        send: { msg: 'Evento actualizado', data: updatedEvent },
       });
     } catch (error) {
       next({ status: 400, send: { msg: 'Evento no actualizado', err: error } });
