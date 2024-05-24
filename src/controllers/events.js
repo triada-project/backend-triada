@@ -1,8 +1,11 @@
 const Events = require('../models/events');
+const Users = require('../models/users');
 const twilio = require('twilio');
 const { handleHttpError } = require('../utils/handleError');
 const { matchedData } = require('express-validator');
 const { customAlphabet } = require('nanoid');
+const sendGridApiKey = process.env.SENDGRID_API_KEY;
+const sgMail = require('@sendgrid/mail');
 
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const nanoid = customAlphabet(alphabet, 6);
@@ -80,10 +83,23 @@ module.exports = {
 
   post: async (req, res, next) => {
     //res.send({ data: 'metodo post events' });
+
     try {
       //const body = matchedData(req);
       const body = req.body;
       let events = await Events.create(body);
+      const user = await Users.findById(body.musician);
+
+      const msg = {
+        to: user.email,
+        from: 'Administracion@triada.rocks',
+        subject: 'TRIADA: ¡Tienes una nueva solicitud de evento!',
+        templateId: 'd-9087bbe003e642c9946de37c231ea9c7',
+        dynamicTemplateData: {
+          verify_url: `http://localhost:3000/`,
+        },
+      };
+      await sgMail.send(msg);
       next({ status: 201, send: { msg: 'Evento creado', data: { events } } });
     } catch (error) {
       //handleHttpError(res, 'Evento no creado', 404);
