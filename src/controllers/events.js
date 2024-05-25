@@ -1,8 +1,11 @@
 const Events = require('../models/events');
+const Users = require('../models/users');
 const twilio = require('twilio');
 const { handleHttpError } = require('../utils/handleError');
 const { matchedData } = require('express-validator');
 const { customAlphabet } = require('nanoid');
+const sendGridApiKey = process.env.SENDGRID_API_KEY;
+const sgMail = require('@sendgrid/mail');
 
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const nanoid = customAlphabet(alphabet, 6);
@@ -23,7 +26,7 @@ async function enviarCodigoPorSMS(
 
     const client = twilio(accountSid, authToken);
 
-    const message = `TRIADA - El código de confirmación para tu evento es ${codigoConfirmacion}. Compártelo al músico para iniciar tu evento.`;
+    const message = `TRIADA - El código de confirmación para tu evento es ${codigoConfirmacion}. Compártelo al músico para finalizar el pago.`;
 
     await client.messages.create({
       body: message,
@@ -56,7 +59,7 @@ module.exports = {
     }
   },
 
-  getAll: async (req, res, next) => {
+  getAllEventsMusician: async (req, res, next) => {
     const musicianId = req.params.musicianId; // Obtener el ID del músico de los parámetros de la solicitud
     try {
       let events = await Events.find({ musician: musicianId });
@@ -67,12 +70,36 @@ module.exports = {
     }
   },
 
+  getAllEventsClient: async (req, res, next) => {
+    const clientId = req.params.clientId; // Obtener el ID del cliente de los parámetros de la solicitud
+    try {
+      let events = await Events.find({ client: clientId });
+      next({ status: 200, send: { msg: 'Eventos encontrados', data: events } });
+    } catch (error) {
+      next({ status: 400, send: { msg: 'Eventos no encontrados' } });
+      handleHttpError(res, 'Eventos no encontrados', 404);
+    }
+  },
+
   post: async (req, res, next) => {
     //res.send({ data: 'metodo post events' });
+
     try {
       //const body = matchedData(req);
       const body = req.body;
       let events = await Events.create(body);
+      const user = await Users.findById(body.musician);
+
+      const msg = {
+        to: user.email,
+        from: 'Administracion@triada.rocks',
+        subject: 'TRIADA: ¡Tienes una nueva solicitud de evento!',
+        templateId: 'd-9087bbe003e642c9946de37c231ea9c7',
+        dynamicTemplateData: {
+          verify_url: `http://localhost:3000/`,
+        },
+      };
+      await sgMail.send(msg);
       next({ status: 201, send: { msg: 'Evento creado', data: { events } } });
     } catch (error) {
       //handleHttpError(res, 'Evento no creado', 404);
@@ -156,13 +183,43 @@ module.exports = {
 
   put: async (req, res, next) => {
     const { id } = req.params;
+
     try {
-      let updatedEvents = await Events.findByIdAndUpdate(id, req.body, {
+      const event = await Events.findById(id);
+      const userClient = await Users.findById(event.client);
+      const userMusician = await Users.findById(event.musician);
+      console.log(userClient);
+      console.log(userMusician);
+      // 1. Actualiza el evento y obtén el documento actualizado
+      const updatedEvent = await Events.findByIdAndUpdate(id, req.body, {
         new: true,
       });
+      if (updatedEvent.status === 'rechazado') {
+        const msg = {
+          to: userClient.email,
+          from: 'Administracion@triada.rocks',
+          subject: 'TRIADA - Evento no aceptado :(',
+          templateId: 'd-4a4d8278dfe944b7bdfec926ecaf10c9',
+          // dynamicTemplateData: {
+          //   verify_url: `http://localhost:3000/`,
+          // },
+        };
+        await sgMail.send(msg);
+      } else if (updatedEvent.status === 'aceptado') {
+        const msg = {
+          to: userClient.email,
+          from: 'Administracion@triada.rocks',
+          subject: 'TRIADA - Evento aceptado :)',
+          templateId: 'd-d8224d499a734199b3a0d64ebd99babe',
+          dynamicTemplateData: {
+            musico: userMusician.name,
+          },
+        };
+        await sgMail.send(msg);
+      }
       next({
         status: 200,
-        send: { msg: 'Evento actualizado', data: updatedEvents },
+        send: { msg: 'Evento actualizado', data: updatedEvent },
       });
     } catch (error) {
       next({ status: 400, send: { msg: 'Evento no actualizado', err: error } });

@@ -3,7 +3,11 @@ const eventsRouter = express.Router();
 const { validatorPostEvent } = require('../validators/events');
 const eventController = require('../controllers/events');
 
-eventsRouter.get('/:musicianId/events', eventController.getAll);
+eventsRouter.get('/:musicianId/events', eventController.getAllEventsMusician);
+eventsRouter.get(
+  '/:clientId/eventsClient/',
+  eventController.getAllEventsClient,
+);
 eventsRouter.get('/:id', eventController.getById);
 //eventsRouter.post('/', validatorPostEvent, eventController.post);
 eventsRouter.post('/', eventController.post);

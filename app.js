@@ -21,6 +21,7 @@ const fileUpload = require('express-fileupload');
 const env = require('dotenv').config({ path: './.env' });
 const mongoose = require('mongoose');
 const Events = require('./src/models/events.js');
+const Users = require('./src/models/users.js');
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2022-08-01',
@@ -124,19 +125,32 @@ app.post('/create-payment-intent', async (req, res) => {
   console.log('_id', _id);
 
   try {
-    //8const event = await Events.findById(eventId);
+    const event = await Events.findById(_id);
+    const musicianData = await Users.findById(event.musician.toString());
+    console.log(musicianData.id_stripe);
+    // console.log(event, 'hola');
 
-    //console.log(event,'hola');
-
-    // if (!event){
-    //   return res.status(404).send({error:{message:'Evento no encontrado'}});
+    // if (!event) {
+    //   return res
+    //     .status(404)
+    //     .send({ error: { message: 'Evento no encontrado' } });
     // }
+
+    const totalAmount = eventFee * 100;
+    const triadaFee = (totalAmount * 0.1).toFixed(0);
+    console.log(totalAmount);
+    console.log(triadaFee);
+    console.log(event.musician.toString());
 
     const paymentIntent = await stripe.paymentIntents.create({
       currency: 'MXN',
-      amount: eventFee,
+      amount: totalAmount,
       automatic_payment_methods: { enabled: true },
       capture_method: 'manual',
+      application_fee_amount: triadaFee,
+      transfer_data: {
+        destination: musicianData.id_stripe,
+      },
     });
     //res.redirect('http://localhost:3000');
     // Send publishable key and PaymentIntent details to client
@@ -144,8 +158,8 @@ app.post('/create-payment-intent', async (req, res) => {
       clientSecret: paymentIntent.client_secret,
     });
 
-    const event = await Events.findById(_id);
-    console.log(event, 'soy event');
+    // const event = await Events.findById(_id);
+    // console.log(event, 'soy event');
 
     if (event) {
       event.idStripePayment = paymentIntent.client_secret;
@@ -197,12 +211,10 @@ app.post('/capture-payment', async (req, res) => {
   const { paymentIntentId } = req.body;
   try {
     const capturedPayment = await capturePayment(paymentIntentId);
-    res
-      .status(200)
-      .send({
-        message: 'Payment captured successfully',
-        payment: capturedPayment,
-      });
+    res.status(200).send({
+      message: 'Payment captured successfully',
+      payment: capturedPayment,
+    });
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
