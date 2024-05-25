@@ -1,5 +1,6 @@
 const Users = require('../models/users');
 const jwt = require('../helpers/jwt');
+const bcrypt = require('bcrypt');
 const twilio = require('twilio');
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -35,9 +36,16 @@ module.exports = {
       next({ status: 404, send: { msg: 'Usuario no encontrado' } });
     }
   },
+
   post: async (req, res, next) => {
     try {
-      let user = await Users.create(req.body);
+      // Hashear la contraseña antes de guardar el usuario
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      const user = await Users.create({
+        ...req.body,
+        password: hashedPassword,
+      });
+
       // Generar token de verificación (JWT o UUID)
       const verificationToken = jwt.create({ userId: user._id }); // O usar uuid
       user.verificationToken = verificationToken;
@@ -60,9 +68,13 @@ module.exports = {
       next({ status: 400, send: { msg: 'Usuario no creado', err: error } });
     }
   },
+
   put: async (req, res, next) => {
     try {
       const { id } = req.params;
+      if (req.body.password) {
+        req.body.password = await bcrypt.hash(req.body.password, 10);
+      }
       let user = await Users.findByIdAndUpdate(id, req.body);
       next({
         status: 201,
@@ -75,6 +87,7 @@ module.exports = {
       });
     }
   },
+
   delete: async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -84,22 +97,24 @@ module.exports = {
       next({ status: 400, send: { msg: 'Usuario no eliminado', data: error } });
     }
   },
+
   login: async (req, res, next) => {
     try {
       let user = await Users.findOne({ email: req.body.email });
       if (!user.emailVerified) {
-        next({ status: 400, send: { msg: 'Cuenta no validada' } });
+        return next({ status: 400, send: { msg: 'Cuenta no validada' } });
       }
-      if (user.password != req.body.password) {
-        next({ status: 401, send: { msg: 'Credenciales incorrectas' } });
+      const isMatch = await bcrypt.compare(req.body.password, user.password);
+      if (!isMatch) {
+        return next({ status: 401, send: { msg: 'Credenciales incorrectas' } });
       }
-      // delete user.password;
       let token = jwt.create(user);
       next({ status: 200, send: { msg: 'Acceso autorizado', token: token } });
     } catch (error) {
       next({ status: 401, send: { msg: 'Acceso no autorizado', err: error } });
     }
   },
+
   verifyEmail: async (req, res, next) => {
     const { token, id } = req.query;
 
