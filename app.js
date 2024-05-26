@@ -17,7 +17,7 @@ const stripeConnect = require('stripe')(
     apiVersion: '2023-10-16',
   },
 );
-const fileUpload = require('express-fileupload');
+//const fileUpload = require('express-fileupload');
 const env = require('dotenv').config({ path: './.env' });
 const mongoose = require('mongoose');
 const Events = require('./src/models/events.js');
@@ -43,12 +43,12 @@ morganBody(app, {
   },
 });
 
-app.use(
-  fileUpload({
-    useTempFiles: true,
-    tempFileDir: './uploads',
-  }),
-);
+// app.use(
+//   fileUpload({
+//     useTempFiles: true,
+//     tempFileDir: './uploads',
+//   }),
+// );
 
 app.use('/', routes);
 

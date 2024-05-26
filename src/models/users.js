@@ -17,6 +17,11 @@ const multimediaSchema = new mongoose.Schema({
   videos: Array,
 });
 
+const imageSchema = new mongoose.Schema({
+  keyImage: String,
+  URLImage: String,
+});
+
 const userSchema = new mongoose.Schema({
   name: String,
   email: {
@@ -35,7 +40,7 @@ const userSchema = new mongoose.Schema({
   },
   emailVerified: { type: Boolean, default: false },
   verificationToken: { type: String },
-  profilePicture: String,
+  profilePicture: imageSchema,
   role: {
     type: String,
     enum: ['cliente', 'musico'],
@@ -109,7 +114,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  multimedia: multimediaSchema,
+  images: [imageSchema],
+  videos: Array,
   eventFee: {
     type: Number,
     // required: function () {
