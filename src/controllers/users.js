@@ -114,6 +114,21 @@ module.exports = {
       next({ status: 401, send: { msg: 'Acceso no autorizado', err: error } });
     }
   },
+  loginVerify: async (req, res, next) => {
+    try {
+      let user = await Users.findOne({ email: req.body.email });
+      if (!user.emailVerified) {
+        return next({ status: 400, send: { msg: 'Cuenta no validada' } });
+      }
+      if (user.password != req.body.password) {
+        next({ status: 401, send: { msg: 'Credenciales incorrectas' } });
+      }
+      let token = jwt.create(user);
+      next({ status: 200, send: { msg: 'Acceso autorizado', token: token } });
+    } catch (error) {
+      next({ status: 401, send: { msg: 'Acceso no autorizado', err: error } });
+    }
+  },
 
   verifyEmail: async (req, res, next) => {
     const { token, id } = req.query;
