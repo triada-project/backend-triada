@@ -1,4 +1,6 @@
-const stripe = require("stripe")('sk_test_51P4oMODoqexf69WmNIX7SWam7twBN8OmN2QZBtEuGc5PQWqghVmzcU0V6fMyL13wMpwvGQtac9MiIGr8w9BV7bNx00iLyFehLZ');
+const stripe = require('stripe')(
+  'sk_test_51P4oMODoqexf69WmNIX7SWam7twBN8OmN2QZBtEuGc5PQWqghVmzcU0V6fMyL13wMpwvGQtac9MiIGr8w9BV7bNx00iLyFehLZ',
+);
 
 const calculateOrderAmount = (items) => {
   // Replace this constant with a calculation of the order's amount
@@ -18,7 +20,7 @@ const createPaymentIntent = async (req, res) => {
     description: 'Example charge',
     source: token,
     capture: false,
-    currency: "mxn",
+    currency: 'mxn',
     // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
     automatic_payment_methods: {
       enabled: true,
@@ -31,9 +33,6 @@ const createPaymentIntent = async (req, res) => {
 };
 
 module.exports = { createPaymentIntent };
-
-
-
 
 // const stripe = require('stripe')('sk_test_51P4oMODoqexf69WmNIX7SWam7twBN8OmN2QZBtEuGc5PQWqghVmzcU0V6fMyL13wMpwvGQtac9MiIGr8w9BV7bNx00iLyFehLZ');
 
@@ -64,15 +63,6 @@ module.exports = { createPaymentIntent };
 // };
 
 // module.exports = { post: createCheckoutSession };
-
-
-
-
-
-
-
-
-
 
 /*
 
@@ -124,15 +114,6 @@ module.exports = {
 
 //app.listen(3005, () => console.log('Running on port 3005'));
 
-
-
-
-
-
-
-
-
-
 /*
 import Stripe from "stripe"
 
@@ -165,8 +146,8 @@ export const createSession = async (req,res) => {
             }
         ],
         mode: 'payment',
-        success_url: 'http://localhost:3000/success',
-        cancel_url: 'http://localhost:3000/cancel'
+        success_url: 'https://www.triada.rocks/success',
+        cancel_url: 'https://www.triada.rocks/cancel'
 
     })
 
@@ -175,15 +156,6 @@ export const createSession = async (req,res) => {
 }
 
 */
-
-
-
-
-
-
-
-
-
 
 /*
 const stripe = require('stripe')('sk_test_51P4oMODoqexf69WmNIX7SWam7twBN8OmN2QZBtEuGc5PQWqghVmzcU0V6fMyL13wMpwvGQtac9MiIGr8w9BV7bNx00iLyFehLZ');
@@ -217,24 +189,6 @@ module.exports = {
 
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*import Stripe from "stripe"
 
 const stripe = new Stripe('sk_test_51P4oMODoqexf69WmNIX7SWam7twBN8OmN2QZBtEuGc5PQWqghVmzcU0V6fMyL13wMpwvGQtac9MiIGr8w9BV7bNx00iLyFehLZ')
@@ -266,8 +220,8 @@ export const createSession = async (req,res) => {
             }
         ],
         mode: 'payment',
-        success_url: 'http://localhost:3000/success',
-        cancel_url: 'http://localhost:3000/cancel'
+        success_url: 'https://www.triada.rocks/success',
+        cancel_url: 'https://www.triada.rocks/cancel'
 
     })
 

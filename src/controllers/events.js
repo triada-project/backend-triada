@@ -96,7 +96,7 @@ module.exports = {
         subject: 'TRIADA: ¡Tienes una nueva solicitud de evento!',
         templateId: 'd-9087bbe003e642c9946de37c231ea9c7',
         dynamicTemplateData: {
-          verify_url: `http://localhost:3000/`,
+          verify_url: `https://www.triada.rocks/`,
         },
       };
       await sgMail.send(msg);
@@ -201,7 +201,7 @@ module.exports = {
           subject: 'TRIADA - Evento no aceptado :(',
           templateId: 'd-4a4d8278dfe944b7bdfec926ecaf10c9',
           // dynamicTemplateData: {
-          //   verify_url: `http://localhost:3000/`,
+          //   verify_url: `https://www.triada.rocks/`,
           // },
         };
         await sgMail.send(msg);
