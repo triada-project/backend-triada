@@ -12,6 +12,11 @@ const addressSchema = new mongoose.Schema({
   neighborhood: String,
 });
 
+const multimediaSchema = new mongoose.Schema({
+  images: Array,
+  videos: Array,
+});
+
 const imageSchema = new mongoose.Schema({
   keyImage: String,
   URLImage: String,
@@ -33,26 +38,37 @@ const userSchema = new mongoose.Schema({
     required: [true, 'El password es requerido'],
     match: /^(.){8,300}$/,
   },
-
+  emailVerified: { type: Boolean, default: false },
+  verificationToken: { type: String },
   profilePicture: imageSchema,
   role: {
     type: String,
     enum: ['cliente', 'musico'],
     required: true,
   },
-  images: [imageSchema],
-  videos: Array,
   // address: {
   //   type: addressSchema,
   //   required: function () {
   //     return this.role === 'musico';
   //   },
   // },
+  state: {
+    type: String,
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
+  },
+  city: {
+    type: String,
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
+  },
   musicianType: {
     type: String,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
     enum: {
       values: ['Banda', 'Solista'],
       message: '{VALUE} is not supported',
@@ -61,51 +77,56 @@ const userSchema = new mongoose.Schema({
   eventType: {
     type: Array,
     sparse: true,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
   },
   musicalGenre: {
     type: Array,
     sparse: true,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
   },
   repertory: {
     type: Array,
     sparse: true,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
   },
   requirements: {
     type: Array,
     sparse: true,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
   },
   availability: {
     type: Array,
     sparse: true,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
   },
   description: String,
-
+  phoneMusician: {
+    type: String,
+    required: false,
+  },
+  images: [imageSchema],
+  videos: Array,
   eventFee: {
     type: Number,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
   },
   maximumHoursEvent: {
     type: Number,
-    required: function () {
-      return this.role === 'musico';
-    },
+    // required: function () {
+    //   return this.role === 'musico';
+    // },
   },
   id_stripe: String,
 });
@@ -114,6 +135,9 @@ userSchema.pre('save', function (next) {
   if (this.role === 'cliente') {
     // Eliminar los campos específicos de "músico"
     this.musicianType = undefined;
+    this.address = undefined;
+    this.state = undefined;
+    this.city = undefined;
     this.eventType = undefined;
     this.musicalGenre = undefined;
     this.repertory = undefined;
@@ -122,6 +146,8 @@ userSchema.pre('save', function (next) {
     this.eventFee = undefined;
     this.maximumHoursEvent = undefined;
     this.id_stripe = undefined;
+    this.description = undefined;
+    this.phoneMusician = undefined;
   }
   next();
 });
