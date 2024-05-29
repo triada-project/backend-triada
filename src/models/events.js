@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-// const addressSchema = require('./adressSchema');
+//const addressSchema = require('./adressSchema');
 
 const addressSchema = new mongoose.Schema({
   state: String,
@@ -7,7 +7,8 @@ const addressSchema = new mongoose.Schema({
   city: String,
   street: String,
   exteriorNumber: String,
-  neighborhood: String,
+  interiorNumber: String,
+  neighbourhood: String,
 });
 
 const eventSchema = new mongoose.Schema({
@@ -52,6 +53,32 @@ const eventSchema = new mongoose.Schema({
     default: false,
     required: false,
   },
+  phoneClient: {
+    type: String,
+    required: true,
+  },
+  startHour: {
+    type: String,
+    required: true,
+  },
+  endHour: {
+    type: String,
+    required: true,
+  },
+  totalHours: {
+    type: Number,
+    required: true,
+  },
+  eventFee: {
+    type: Number,
+    required: true,
+  },
+  isChecked: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+
   status: {
     type: String,
     default: 'pendiente',
