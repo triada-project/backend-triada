@@ -6,6 +6,11 @@ function authenticateToken(req, res, next) {
 
   if (token == null) return res.sendStatus(401); // No autorizado
 
+  // Permitir solicitudes POST a la ruta de registro sin token
+  if (req.method === 'POST' && req.path === '/') {
+    return next();
+  }
+
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) return res.sendStatus(403); // Prohibido
     req.user = user;

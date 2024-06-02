@@ -11,7 +11,7 @@ userRouter.get(
 userRouter.get('/musicianHome', userController.getMusicianHome);
 userRouter.get('/:id', userController.getById);
 userRouter.get('/dashboard/:id', authenticateToken, userController.getById);
-userRouter.post('/', userController.post);
+userRouter.post('/', authenticateToken, userController.post);
 userRouter.put('/:id', userController.put);
 userRouter.delete('/:id', userController.delete);
 
