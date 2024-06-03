@@ -33,18 +33,18 @@ const allowedOrigin = process.env.URL_ALLOW_ORIGIN;
 
 db.connect();
 
-app.use(cors());
+//app.use(cors());
 
 // // Middleware de CORS
-// app.use(
-//   cors({
-//     origin: allowedOrigin,
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//     allowedHeaders: ['Content-Type', 'Authorization'],
-//   }),
-// );
+app.use(
+  cors({
+    origin: allowedOrigin,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }),
+);
 
-// app.use(originMiddleware);
+app.use(originMiddleware);
 
 app.use(express.json());
 
