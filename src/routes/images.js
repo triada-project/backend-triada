@@ -7,6 +7,7 @@ const {
   deleteImage,
   getAllImages,
 } = require('../controllers/imageController');
+const authenticateToken = require('../helpers/authenticateToken');
 
 router.post(
   '/profile-picture/:userId',
@@ -20,41 +21,50 @@ router.post(
   },
 );
 
-router.post('/images/:userId', upload.array('images', 10), (req, res, next) => {
-  const {
-    files,
-    params: { userId },
-  } = req;
-  Promise.all(files.map((file) => createImage(userId, file, next)))
-    .then(() =>
-      next({
-        status: 201,
-        send: { success: true, message: 'Images uploaded successfully' },
-      }),
-    )
-    .catch((error) =>
-      next({
-        status: 500,
-        send: {
-          success: false,
-          message: error.message || 'Internal Server Error',
-        },
-      }),
-    );
-});
+router.post(
+  '/images/:userId',
+  authenticateToken,
+  upload.array('images', 10),
+  (req, res, next) => {
+    const {
+      files,
+      params: { userId },
+    } = req;
+    Promise.all(files.map((file) => createImage(userId, file, next)))
+      .then(() =>
+        next({
+          status: 201,
+          send: { success: true, message: 'Images uploaded successfully' },
+        }),
+      )
+      .catch((error) =>
+        next({
+          status: 500,
+          send: {
+            success: false,
+            message: error.message || 'Internal Server Error',
+          },
+        }),
+      );
+  },
+);
 
-router.get('/images/:userId', (req, res, next) => {
+router.get('/images/:userId', authenticateToken, (req, res, next) => {
   const {
     params: { userId },
   } = req;
   getAllImages(userId, next);
 });
 
-router.delete('/images/:userId/:imageKey', (req, res, next) => {
-  const {
-    params: { userId, imageKey },
-  } = req;
-  deleteImage(userId, imageKey, next);
-});
+router.delete(
+  '/images/:userId/:imageKey',
+  authenticateToken,
+  (req, res, next) => {
+    const {
+      params: { userId, imageKey },
+    } = req;
+    deleteImage(userId, imageKey, next);
+  },
+);
 
 module.exports = router;

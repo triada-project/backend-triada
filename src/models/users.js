@@ -148,6 +148,8 @@ userSchema.pre('save', function (next) {
     this.id_stripe = undefined;
     this.description = undefined;
     this.phoneMusician = undefined;
+    this.images = undefined;
+    this.videos = undefined;
   }
   next();
 });

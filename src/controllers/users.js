@@ -12,10 +12,26 @@ const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(sendGridApiKey);
 
 module.exports = {
-  getAll: async (req, res, next) => {
+  getMusicianHome: async (req, res, next) => {
+    const projection = {
+      name: 1,
+      profilePicture: 1,
+      city: 1,
+      state: 1,
+      eventType: 1,
+      musicalGenre: 1,
+      musicianType: 1,
+    };
     try {
-      let user = await Users.find(req.params);
-      next({ status: 200, send: { msg: 'Usuarios', data: user } });
+      let users = await Users.aggregate([
+        { $match: { role: 'musico' } }, // Filtra por rol
+        // { $sample: { size: 6 } }, // Selecciona 6 documentos aleatorios
+        { $project: projection }, // Aplica la proyección
+      ]);
+      next({
+        status: 200,
+        send: { msg: 'Usuarios (músicos aleatorios)', data: users },
+      });
     } catch (error) {
       next({
         status: 404,
@@ -26,8 +42,60 @@ module.exports = {
 
   getById: async (req, res, next) => {
     const { id } = req.params;
+    const projection = {
+      name: 1,
+      profilePicture: 1,
+      city: 1,
+      state: 1,
+      eventType: 1,
+      musicalGenre: 1,
+      musicianType: 1,
+      role: 1,
+      repertory: 1,
+      requirements: 1,
+      description: 1,
+      availability: 1,
+      videos: 1,
+      images: 1,
+      phoneMusician: 1,
+      eventFee: 1,
+      maximumHoursEvent: 1,
+    };
     try {
-      let users = await Users.findById(id);
+      let users = await Users.findById(id, projection);
+      next({
+        status: 200,
+        send: { msg: 'Usuario encontrado', data: users },
+      });
+    } catch (error) {
+      next({ status: 404, send: { msg: 'Usuario no encontrado' } });
+    }
+  },
+
+  getByIdDashboard: async (req, res, next) => {
+    const { id } = req.params;
+    const projection = {
+      name: 1,
+      profilePicture: 1,
+      city: 1,
+      state: 1,
+      eventType: 1,
+      musicalGenre: 1,
+      musicianType: 1,
+      role: 1,
+      repertory: 1,
+      requirements: 1,
+      description: 1,
+      availability: 1,
+      videos: 1,
+      images: 1,
+      phoneMusician: 1,
+      eventFee: 1,
+      maximumHoursEvent: 1,
+      phoneMusician: 1,
+    };
+    try {
+      let users = await Users.findById(id, projection);
       next({
         status: 200,
         send: { msg: 'Usuario encontrado', data: users },
@@ -38,6 +106,7 @@ module.exports = {
   },
 
   post: async (req, res, next) => {
+    const apiurl = process.env.URL_API_TRIADA;
     try {
       // Hashear la contraseña antes de guardar el usuario
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -46,7 +115,7 @@ module.exports = {
         password: hashedPassword,
       });
 
-      // Generar token de verificación (JWT o UUID)
+      // Generar token de verificación (JWT)
       const verificationToken = jwt.create({ userId: user._id }); // O usar uuid
       user.verificationToken = verificationToken;
       await user.save();
@@ -58,7 +127,7 @@ module.exports = {
         subject: 'Verifica tu correo electrónico',
         templateId: 'd-7596721b285940709a118c0a42f6f0d7',
         dynamicTemplateData: {
-          verify_url: `https://apitriada.rodolfo-ramirez.com/users/signup/email/verify?token=${verificationToken}&id=${user._id}`,
+          verify_url: `${apiurl}/users/signup/email/verify?token=${verificationToken}&id=${user._id}`,
         },
       };
       await sgMail.send(msg);
@@ -151,9 +220,9 @@ module.exports = {
 
         // Redirige según el rol
         if (userRole === 'musico') {
-          res.redirect(`https://www.triada.rocks/stepper/${user._id}`);
+          res.redirect(`${process.env.URL_TRIADA_PAGE}/stepper/${user._id}`);
         } else if (userRole === 'cliente') {
-          res.redirect('https://www.triada.rocks/');
+          res.redirect(`${process.env.URL_TRIADA_PAGE}`);
         } else {
           // Maneja roles inválidos
           res.status(400).send({ msg: 'Rol de usuario inválido' });
