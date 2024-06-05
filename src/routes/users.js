@@ -1,7 +1,7 @@
 const express = require('express');
 const userRouter = express.Router();
 const userController = require('../controllers/users');
-const authenticateToken = require('../helpers/authenticateToken');
+const authenticateToken = require('../middlewares/authenticateToken');
 
 userRouter.get('/signup/email/verify', userController.verifyEmail);
 userRouter.get('/musicianHome', userController.getMusicianHome);

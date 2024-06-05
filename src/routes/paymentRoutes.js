@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const payMentController = require('../controllers/paymentController.js');
-const authenticateToken = require('../helpers/authenticateToken');
+const authenticateToken = require('../middlewares/authenticateToken.js');
 
 //router.post('create-checkout-session', payMentController.post);
 router.post(

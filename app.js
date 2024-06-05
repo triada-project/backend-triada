@@ -23,7 +23,7 @@ const env = require('dotenv').config({ path: './.env' });
 const mongoose = require('mongoose');
 const Events = require('./src/models/events.js');
 const Users = require('./src/models/users.js');
-const originMiddleware = require('./src/helpers/originMiddleware');
+const originMiddleware = require('./src/middlewares/originMiddleware.js');
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2022-08-01',
