@@ -7,7 +7,7 @@ const {
   deleteImage,
   getAllImages,
 } = require('../controllers/imageController');
-const authenticateToken = require('../helpers/authenticateToken');
+const authenticateToken = require('../middlewares/authenticateToken');
 
 router.post(
   '/profile-picture/:userId',
