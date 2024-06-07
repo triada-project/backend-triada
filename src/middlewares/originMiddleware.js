@@ -1,4 +1,4 @@
-const allowedOrigin = 'https://triada.rocks'; // Asegúrate de incluir el protocolo (https://)
+const allowedOrigin = process.env.URL_ALLOW_ORIGIN; // Asegúrate de incluir el protocolo (https://)
 
 function originMiddleware(req, res, next) {
   const origin = req.headers.origin;
