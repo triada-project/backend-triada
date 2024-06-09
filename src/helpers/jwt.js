@@ -8,7 +8,7 @@ module.exports = {
       { _id: data._id, email: data.email, name: data.name, role: data.role },
       JWT_SECRET,
       {
-        expiresIn: 6000,
+        expiresIn: 3600,
       },
     );
     return token;
