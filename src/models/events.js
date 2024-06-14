@@ -9,6 +9,7 @@ const addressSchema = new mongoose.Schema({
   exteriorNumber: String,
   interiorNumber: String,
   neighbourhood: String,
+  reference: String,
 });
 
 const eventSchema = new mongoose.Schema({
