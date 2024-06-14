@@ -5,12 +5,14 @@ const morganBody = require('morgan-body');
 const loggerStream = require('./src/utils/handleLogger');
 const cors = require('cors');
 const routes = require('./src/routes/index.js');
+const moment = require('moment');
 const app = express();
 const { resolve } = require('path');
 const PORT = process.env.PORT || 5000;
 const db = require('./src/helpers/db');
 const env = require('dotenv').config({ path: './.env' });
 const mongoose = require('mongoose');
+const cron = require('node-cron');
 const Events = require('./src/models/events.js');
 const Users = require('./src/models/users.js');
 const originMiddleware = require('./src/middlewares/originMiddleware.js');
@@ -73,6 +75,30 @@ app.use(express.static(process.env.STATIC_DIR));
 app.get('/', (req, res) => {
   const path = resolve(process.env.STATIC_DIR + '/index.html');
   res.sendFile(path);
+});
+
+// Configurar node-cron para que ejecute una tarea cada hora
+cron.schedule('* * * * *', async () => {
+  const now = moment();
+  const currentDate = now.format('D/M/YYYY'); // Formato 'D/M/YYYY'
+  const currentTime = now.format('HH:mm'); // Formato 'HH:mm'
+  //console.log(currentDate, currentTime);
+
+  try {
+    const events = await Events.find({
+      status: 'aceptado',
+      date: currentDate,
+      startHour: { $lte: currentTime }, // startHour menor o igual a la hora actual
+    });
+
+    for (const event of events) {
+      event.status = 'en curso';
+      await event.save();
+      console.log(`Evento ${event._id} actualizado a "en curso".`);
+    }
+  } catch (error) {
+    console.error('Error actualizando eventos:', error);
+  }
 });
 
 app.listen(PORT, () => {
